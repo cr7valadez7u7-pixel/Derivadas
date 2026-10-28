@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#09070f">
+<title>Validez | Práctica de derivadas</title>
+<style>
+:root{color-scheme:dark;--bg:#09070f;--panel:#14101e;--panel2:#1b1528;--line:#332443;--violet:#a78bfa;--violet2:#7c3aed;--text:#f5f1fc;--muted:#b7acc8;--good:#75e0ad;--bad:#ff8caa}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% -15%,#30204a 0,transparent 48%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{width:min(920px,100%);margin:auto;padding:24px 16px 56px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0 28px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border:1px solid #8b5cf6;border-radius:12px;display:grid;place-items:center;color:#c4b5fd;font-weight:800;font-size:20px;box-shadow:0 0 25px #7c3aed22}
+.brand-name{font-weight:800;letter-spacing:.16em;font-size:15px}.brand-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;border:1px solid var(--line);padding:7px 10px;border-radius:999px;color:#d8c8ff}
+.intro{margin-bottom:22px}.eyebrow{color:var(--violet);font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:700}.intro h1{font-size:clamp(28px,5vw,42px);letter-spacing:-.04em;line-height:1.1;margin:10px 0}.intro p{color:var(--muted);line-height:1.65;max-width:680px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.stat{background:#100d18;border:1px solid var(--line);border-radius:14px;padding:13px 15px}.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.stat strong{font-size:18px}
+.progress-wrap{height:5px;background:#2a2038;border-radius:99px;overflow:hidden;margin:18px 0 22px}.progress{height:100%;width:0;background:linear-gradient(90deg,var(--violet2),#c4b5fd);transition:width .25s}
+.quiz-card,.result-card{background:linear-gradient(145deg,#171222,#100d18);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 60px #0003}
+.q-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.q-count{font-size:13px;color:var(--muted)}.topic{font-size:11px;color:#d8c8ff;background:#302044;border:1px solid #4d326b;border-radius:999px;padding:6px 10px}
+.prompt{font-size:15px;color:var(--muted);margin-bottom:12px}.function{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:clamp(28px,5vw,39px);line-height:1.45;overflow-wrap:anywhere;margin:0 0 25px;color:#fff}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:11px}.option{border:1px solid #3a2c4c;background:#171220;color:var(--text);border-radius:13px;padding:15px;text-align:left;cursor:pointer;font:inherit;display:flex;gap:12px;align-items:flex-start;min-height:66px;transition:border .15s,background .15s,transform .15s}.option:hover:not(:disabled){border-color:var(--violet);background:#21172f;transform:translateY(-1px)}.letter{flex:0 0 27px;height:27px;border-radius:8px;background:#2a2039;color:#d8c8ff;display:grid;place-items:center;font-size:12px;font-weight:800}.formula{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:19px;line-height:1.4;overflow-wrap:anywhere;padding-top:1px}.option:disabled{cursor:default}.option.correct{border-color:var(--good);background:#10251e}.option.correct .letter{background:#1b6247;color:#d9ffeb}.option.wrong{border-color:var(--bad);background:#2b1420}.option.wrong .letter{background:#6d263c;color:#ffe4eb}
+.feedback{display:none;margin-top:18px;border-radius:13px;padding:15px 16px;line-height:1.6;background:#100d18;border:1px solid var(--line)}.feedback.show{display:block}.feedback.good{border-color:#28694c}.feedback.bad{border-color:#713047}.feedback-title{font-weight:800;margin-bottom:5px}.feedback.good .feedback-title{color:var(--good)}.feedback.bad .feedback-title{color:var(--bad)}.explanation{color:var(--muted);font-size:14px;margin-top:6px}.math-answer{font-family:"Cambria Math",Cambria,Georgia,serif;color:#eee4ff;font-size:18px}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}.hint{font-size:12px;color:var(--muted);line-height:1.5}.btn{border:1px solid #8b5cf6;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;border-radius:12px;padding:12px 18px;font:inherit;font-weight:750;cursor:pointer}.btn:hover{filter:brightness(1.12)}.btn:disabled{opacity:.35;cursor:not-allowed}.btn.secondary{background:transparent;border-color:var(--line);color:#e5d8ff}
+.result-card{display:none;text-align:center}.result-card.show{display:block}.score{font-size:64px;font-weight:850;letter-spacing:-.06em;color:#c4b5fd;margin:10px}.result-card p{color:var(--muted);line-height:1.6}.result-details{text-align:left;margin:22px 0}.review-item{padding:12px 0;border-bottom:1px solid var(--line);line-height:1.55}.review-item strong{display:block;margin-bottom:4px}.review-item span{color:var(--muted);font-size:14px}
+footer{color:#857994;font-size:12px;text-align:center;line-height:1.6;margin-top:22px}
+@media(max-width:600px){.wrap{padding:16px 12px 36px}header{padding-bottom:20px}.tag{display:none}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:16px}.options{grid-template-columns:1fr}.option{min-height:58px}.actions{align-items:stretch}.hint{max-width:52%}.btn{padding:11px 14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="mark">V</div><div><div class="brand-name">VALIDEZ</div><div class="brand-sub">Aprender con criterio.</div></div></div>
+  <div class="tag">Modo estudio · Cálculo diferencial</div>
+</header>
+<section class="intro">
+  <div class="eyebrow">Práctica guiada / 01</div>
+  <h1>Entrenamiento de derivadas</h1>
+  <p>Resuelve 10 ejercicios de opción múltiple. Las primeras cinco preguntas practican reglas básicas de derivación; las últimas cinco combinan producto, trigonometría, exponenciales y logaritmos. Cada respuesta incluye retroalimentación para que puedas verificar tu procedimiento.</p>
+</section>
+<div class="stats">
+  <div class="stat"><span>Preguntas</span><strong>10 ejercicios</strong></div>
+  <div class="stat"><span>Formato</span><strong>4 opciones</strong></div>
+  <div class="stat"><span>Intentos</span><strong>1 por pregunta</strong></div>
+</div>
+<div class="progress-wrap" aria-label="Progreso"><div class="progress" id="progress"></div></div>
+<main>
+<section class="quiz-card" id="quizCard">
+  <div class="q-meta"><span class="q-count" id="qCount">Pregunta 1 de 10</span><span class="topic" id="topic">Reglas básicas</span></div>
+  <div class="prompt">Calcula la derivada con respecto a x:</div>
+  <h2 class="function" id="question">f(x) = 5</h2>
+  <div class="options" id="options"></div>
+  <div class="feedback" id="feedback" aria-live="polite"></div>
+  <div class="actions"><div class="hint" id="hint">Tómate un momento para pensar antes de elegir.</div><button class="btn" id="nextBtn" disabled>Siguiente →</button></div>
+</section>
+<section class="result-card" id="resultCard">
+  <div class="eyebrow">Sesión completada</div><h2>Resultados</h2><div class="score" id="score">0/10</div><p id="resultMessage"></p>
+  <div class="result-details" id="review"></div>
+  <button class="btn" id="restartBtn">Practicar de nuevo ↻</button>
+</section>
+</main>
+<footer>Validez · Práctica académica de cálculo diferencial<br>Las expresiones se muestran en notación textual compatible con móvil.</footer>
+</div>
+<script>
+const bankBasic = [
+ {topic:"Reglas básicas",q:"f(x) = 8x⁶",a:["48x⁵","8x⁵","48x⁶","6x⁷"],correct:0,why:"Aplicamos la regla de la potencia: d(xⁿ)/dx = n·xⁿ⁻¹. Multiplicamos 8 por 6 y reducimos el exponente en uno: f′(x) = 48x⁵."},
+ {topic:"Exponente negativo",q:"f(x) = x⁻²",a:["−2x⁻³","−2x⁻¹","2x⁻³","−x⁻³"],correct:0,why:"La regla de la potencia también funciona con exponentes negativos: f′(x) = −2x⁻³, equivalente a −2/x³."},
+ {topic:"Potencia fraccionaria",q:"f(x) = x⁵⁄⁴",a:["(5/4)x¹⁄⁴","(1/4)x⁵⁄⁴","5x¹⁄⁴","(5/4)x⁹⁄⁴"],correct:0,why:"Bajamos el exponente como coeficiente y restamos uno al exponente: 5/4 − 1 = 1/4. Entonces f′(x) = (5/4)x¹⁄⁴."},
+ {topic:"Función racional",q:"f(x) = 3/x",a:["−3/x²","3/x²","−3/x","1/x²"],correct:0,why:"Reescribimos 3/x como 3x⁻¹. Su derivada es 3(−1)x⁻² = −3/x²."},
+ {topic:"Radical",q:"f(x) = √(x³)",a:["(3/2)√x","3√x","1/(2√x³)","(1/2)√x"],correct:0,why:"Para x ≥ 0, √(x³) = x³⁄². Aplicando la regla de la potencia: (3/2)x¹⁄² = (3/2)√x."}
+];
+const bankAdvanced = [
+ {topic:"Regla del producto",q:"f(x) = x² · sin(x)",a:["2x·sin(x) + x²·cos(x)","2x·cos(x)","x²·cos(x)","2x·sin(x) − x²·cos(x)"],correct:0,why:"Regla del producto: (uv)′ = u′v + uv′. Con u = x² y v = sin(x), resulta f′(x) = 2x·sin(x) + x²·cos(x)."},
+ {topic:"Regla de la cadena",q:"f(x) = sin(3x)",a:["3cos(3x)","cos(3x)","−3sin(3x)","3sin(3x)"],correct:0,why:"La derivada de sin(u) es cos(u)·u′. Aquí u = 3x y u′ = 3, así que f′(x) = 3cos(3x)."},
+ {topic:"Logaritmo natural",q:"f(x) = ln(x² + 1)",a:["2x/(x² + 1)","1/(x² + 1)","2x·ln(x² + 1)","1/(2x)"],correct:0,why:"La regla es [ln(u)]′ = u′/u. Como u = x² + 1 y u′ = 2x, f′(x) = 2x/(x² + 1)."},
+ {topic:"Producto exponencial",q:"f(x) = x · eˣ",a:["eˣ(x + 1)","xeˣ","eˣ(x − 1)","x·eˣ⁻¹"],correct:0,why:"Aplicamos la regla del producto: f′(x) = 1·eˣ + x·eˣ = eˣ(1 + x)."},
+ {topic:"Cociente y logaritmo",q:"f(x) = ln(x)/x  (x > 0)",a:["(1 − ln(x))/x²","1/x²","(1 + ln(x))/x²","1/x"],correct:0,why:"Con la regla del cociente: f′(x) = [(1/x)·x − ln(x)·1]/x² = (1 − ln(x))/x². Se requiere x > 0."}
+];
+let questions=[],index=0,score=0,answered=false,history=[];
+const $=id=>document.getElementById(id);
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function start(){questions=[...shuffle([...bankBasic]),...shuffle([...bankAdvanced])].map(item=>{const options=item.a.map((text,i)=>({text,correct:i===item.correct}));shuffle(options);return {...item,options};});index=0;score=0;answered=false;history=[];$("quizCard").style.display="block";$("resultCard").classList.remove("show");render();}
+function render(){const item=questions[index];answered=false;$("qCount").textContent=`Pregunta ${index+1} de ${questions.length}`;$("topic").textContent=item.topic;$("question").textContent=item.q;$("progress").style.width=`${index/questions.length*100}%`;$("feedback").className="feedback";$("feedback").innerHTML="";$("nextBtn").disabled=true;$("nextBtn").textContent=index===questions.length-1?"Ver resultados":"Siguiente →";$("hint").textContent="Elige una opción. Solo podrás responder una vez.";
+const letters=["A","B","C","D"];$("options").innerHTML="";item.options.forEach((opt,i)=>{const b=document.createElement("button");b.className="option";b.innerHTML=`<span class="letter">${letters[i]}</span><span class="formula"></span>`;b.querySelector(".formula").textContent=opt.text;b.addEventListener("click",()=>choose(i));$("options").appendChild(b);});}
+function choose(selected){if(answered)return;answered=true;const item=questions[index],chosen=item.options[selected],correct=item.options.findIndex(o=>o.correct);if(chosen.correct)score++;history.push({question:item.q,topic:item.topic,correct:chosen.correct,answer:item.options[correct].text,why:item.why});[...$("options").children].forEach((b,i)=>{b.disabled=true;if(item.options[i].correct)b.classList.add("correct");else if(i===selected)b.classList.add("wrong");});const f=$("feedback");f.className="feedback show "+(chosen.correct?"good":"bad");f.innerHTML=`<div class="feedback-title">${chosen.correct?"Correcto. Bien resuelto.":"No exactamente. Revisa la regla."}</div><div>Derivada correcta: <span class="math-answer"></span></div><div class="explanation"></div>`;f.querySelector(".math-answer").textContent=item.options[correct].text;f.querySelector(".explanation").textContent=item.why;$("hint").textContent=chosen.correct?"Buen trabajo: identifica la regla que utilizaste.":"Observa qué regla corresponde y cómo se aplica."; $("nextBtn").disabled=false;$("progress").style.width=`${(index+1)/questions.length*100}%`;}
+function next(){if(!answered)return;if(index<questions.length-1){index++;render();}else finish();}
+function finish(){$("quizCard").style.display="none";$("resultCard").classList.add("show");$("progress").style.width="100%";$("score").textContent=`${score}/10`;const pct=score*10;$("resultMessage").textContent=pct===100?"Excelente dominio. Intenta otra ronda para comprobar que puedes derivar sin memorizar el orden.":pct>=70?"Buen avance. Revisa los ejercicios que fallaste y vuelve a intentarlo para reforzar las reglas.":"Sigue practicando: revisa las explicaciones y repite el cuestionario. La precisión mejora con práctica consciente.";$("review").innerHTML="";history.forEach((h,i)=>{const div=document.createElement("div");div.className="review-item";const strong=document.createElement("strong");strong.textContent=`${i+1}. ${h.question} — ${h.correct?"Correcta":"Incorrecta"}`;const span=document.createElement("span");span.textContent=`Derivada: ${h.answer}. ${h.why}`;div.append(strong,span);$("review").appendChild(div);});}
+$("nextBtn").addEventListener("click",next);$("restartBtn").addEventListener("click",start);start();
+</script>
+</body>
+</html>
